@@ -1,22 +1,65 @@
 package pl.wiktor.forumpostsapi.config.security.jwt.model;
 
-import lombok.Data;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
 import java.util.List;
 
-@Data
-public class UserSecurity {
-    private String userId;
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@Builder
+public class UserSecurity implements UserDetails {
 
-    private String email;
+    @NotNull
+    @NotEmpty
+    private String login;
 
-    private String firstName;
+    @NotNull
+    @NotEmpty
+    private String password;
 
-    private String lastName;
+    private List<SimpleGrantedAuthority> authorities;
 
-    private boolean active;
+    public UserSecurity(@NotNull @NotEmpty String login, @NotNull @NotEmpty String password, List<SimpleGrantedAuthority> authorities) {
+        this.login = login;
+        this.password = password;
+        this.authorities = authorities;
+    }
 
-    private String department;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities;
+    }
 
-    private List<String> roles;
+    @Override
+    public String getUsername() {
+        return this.login;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

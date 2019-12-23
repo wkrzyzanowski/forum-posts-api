@@ -11,8 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import pl.wiktor.forumpostsapi.config.security.jwt.JwtAuthenticationFilter;
-import pl.wiktor.forumpostsapi.config.security.jwt.JwtService;
+import pl.wiktor.forumpostsapi.config.security.jwt.JwtRequestFilter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,13 +25,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String ROOT_ENDPOINT = "/**";
 
-    private final JwtService jwtService;
+    @Autowired
+    private JwtRequestFilter requestFilter;
 
     List<String> publicUrls;
 
     @Autowired
-    public WebSecurityConfig(JwtService jwtService) {
-        this.jwtService = jwtService;
+    public WebSecurityConfig(JwtRequestFilter requestFilter) {
+        this.requestFilter = requestFilter;
     }
 
     @Override
@@ -43,8 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(new JwtAuthenticationFilter(jwtService),
-                UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(requestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
