@@ -1,4 +1,4 @@
-package pl.wiktor.forumpostsapi.jwt;
+package pl.wiktor.forumpostsapi.config.security.jwt;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

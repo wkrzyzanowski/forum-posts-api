@@ -1,16 +1,18 @@
-package pl.wiktor.forumpostsapi.jwt;
+package pl.wiktor.forumpostsapi.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import pl.wiktor.forumpostsapi.config.security.jwt.JwtAuthenticationFilter;
+import pl.wiktor.forumpostsapi.config.security.jwt.JwtService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,19 +38,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         configurePublicUrls(http);
-        http
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .cors()
-                .and()
-                .csrf().disable()
+        http.csrf().disable()
+                .headers().frameOptions().disable().and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, ROOT_ENDPOINT).permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtService),
-                        UsernamePasswordAuthenticationFilter.class);
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtService),
+                UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/postsdb");
+        web.ignoring().antMatchers("/postsdb/**");
     }
 
     private void configurePublicUrls(HttpSecurity http) {

@@ -1,4 +1,4 @@
-package pl.wiktor.forumpostsapi.jwt.model;
+package pl.wiktor.forumpostsapi.config.security.jwt.model;
 
 import lombok.Data;
 
