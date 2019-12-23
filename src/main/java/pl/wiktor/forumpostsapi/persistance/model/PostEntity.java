@@ -3,6 +3,7 @@ package pl.wiktor.forumpostsapi.persistance.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "POSTS")
@@ -10,7 +11,6 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
 public class PostEntity {
 
@@ -21,8 +21,35 @@ public class PostEntity {
     @Column(unique = true, nullable = false)
     private String uuid;
 
-    @ManyToOne
+    @Column(nullable = false)
+    private LocalDateTime creationDate;
+
+    @Column(nullable = false)
+    private String content;
+
+    @Column(nullable = false)
+    private String authorUuid;
+
+    @Column
+    private int likes;
+
+    @Column
+    private int dislikes;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id", nullable = false)
     private TopicEntity topic;
 
+    @Override
+    public String toString() {
+        return "PostEntity{" +
+                "id=" + id +
+                ", uuid='" + uuid + '\'' +
+                ", creationDate=" + creationDate +
+                ", content='" + content + '\'' +
+                ", authorUuid='" + authorUuid + '\'' +
+                ", likes=" + likes +
+                ", dislikes=" + dislikes +
+                '}';
+    }
 }

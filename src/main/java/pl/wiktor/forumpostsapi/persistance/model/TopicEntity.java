@@ -3,6 +3,7 @@ package pl.wiktor.forumpostsapi.persistance.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,31 @@ public class TopicEntity {
     @Column(unique = true, nullable = false)
     private String uuid;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "topic")
+    @Column(nullable = false)
+    private String authorUuid;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private LocalDateTime creationDate;
+
+    @Column(nullable = false)
+    private LocalDateTime lastPostDate;
+
+    @Column
+    private boolean important;
+
+    @Column
+    private boolean active;
+
+    @Column
+    private int likes;
+
+    @Column
+    private int dislikes;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "topic")
     private List<PostEntity> posts = new ArrayList<>();
 
 }

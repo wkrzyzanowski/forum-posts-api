@@ -23,8 +23,6 @@ import java.util.List;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String ROOT_ENDPOINT = "/**";
-
     @Autowired
     private JwtRequestFilter requestFilter;
 
