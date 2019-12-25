@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import pl.wiktor.forumpostsapi.config.security.jwt.model.UserSecurity;
 
 import java.util.*;
 import java.util.function.Function;
@@ -21,6 +22,7 @@ public class JwtUtil {
     String SECRET_KEY;
 
     final String AUTHORITIES_CLAIM = "authorities";
+    final String UUID_CLAIM = "uuid";
 
     final String ROLE_USER = "ROLE_USER";
 
@@ -43,6 +45,17 @@ public class JwtUtil {
         return roles;
     }
 
+    public String extractUuid(String token) {
+        final Claims claims = extractAllClaims(token);
+        String uuid = null;
+        try {
+            uuid = (String) claims.get(UUID_CLAIM);
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        return uuid;
+    }
+
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
@@ -56,7 +69,7 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserSecurity userDetails) {
         Map<String, Object> claims = new HashMap<>();
 
         List<String> roles = new ArrayList<>();
@@ -67,6 +80,7 @@ public class JwtUtil {
         });
 
         claims.put(AUTHORITIES_CLAIM, roles);
+        claims.put(UUID_CLAIM, userDetails.getUuid());
         return createToken(claims, userDetails.getUsername());
     }
 
@@ -75,6 +89,7 @@ public class JwtUtil {
         long jwtExpirationTime = currentTime + Long.parseLong(TOKEN_EXPIRE_TIME);
         return Jwts.builder()
                 .claim(AUTHORITIES_CLAIM, claims.get(AUTHORITIES_CLAIM))
+                .claim(UUID_CLAIM, claims.get(UUID_CLAIM))
                 .setSubject(subject)
                 .setIssuedAt(new Date(currentTime))
                 .setExpiration(new Date(jwtExpirationTime))

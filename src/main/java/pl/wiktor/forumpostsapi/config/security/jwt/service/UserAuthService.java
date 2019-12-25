@@ -19,12 +19,14 @@ public class UserAuthService {
 
         String username = jwtUtil.extractUserName(jwt);
 
+        String uuid = jwtUtil.extractUuid(jwt);
+
         List<SimpleGrantedAuthority> roles = new ArrayList<>();
 
         jwtUtil.extractRoles(jwt).forEach(role -> {
             roles.add(new SimpleGrantedAuthority(role));
         });
 
-        return new UserSecurity(username, "secret_password",roles);
+        return new UserSecurity(username, "secret_password", uuid, roles);
     }
 }
