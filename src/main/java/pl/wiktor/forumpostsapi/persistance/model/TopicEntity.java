@@ -27,7 +27,8 @@ public class TopicEntity {
     @Column(nullable = false)
     private String authorUuid;
 
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB")
     private String title;
 
     @Column(nullable = false)
@@ -41,12 +42,6 @@ public class TopicEntity {
 
     @Column
     private boolean active;
-
-    @Column
-    private int likes;
-
-    @Column
-    private int dislikes;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "topic")
     private List<PostEntity> posts = new ArrayList<>();

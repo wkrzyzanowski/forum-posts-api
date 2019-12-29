@@ -146,7 +146,7 @@ public class TopicPostService {
         // UserInfoDTO existingTopicAuthor = userExternalService.requestForUserByUuid(firstTopicDTO.getTopic().getAuthorUuid(), token);
         // UserInfoDTO existingPostAuthor = userExternalService.requestForUserByUuid(firstTopicDTO.getPost().getAuthorUuid(), token);
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().withNano(0);
 
         TopicEntity topicEntity = TopicMapper.fromDtoToEntity(firstTopicDTO.getTopic());
         topicEntity.setUuid(generateUuid());
@@ -175,7 +175,7 @@ public class TopicPostService {
         // TODO: NOT NECESSARY HERE BECAUSE ONLY LOGGED USER CAN CREATE TOPIC/POST
         // UserInfoDTO existingPostAuthor = userExternalService.requestForUserByUuid(postDTO.getAuthorUuid(), token);
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().withNano(0);
 
         TopicEntity topicEntity = getTopicEntity(topicUuid);
 

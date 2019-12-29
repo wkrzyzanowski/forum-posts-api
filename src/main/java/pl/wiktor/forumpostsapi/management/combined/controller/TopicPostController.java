@@ -92,6 +92,7 @@ public class TopicPostController {
             @PathVariable("uuid") String topicUuid,
             @RequestHeader(HttpHeaders.AUTHORIZATION) String token
     ) {
+        log.debug("Delete topic with uuid: " + topicUuid);
         TopicDTO dto = topicPostService.deleteTopic(topicUuid, token);
 
         return ResponseEntity.ok(dto);

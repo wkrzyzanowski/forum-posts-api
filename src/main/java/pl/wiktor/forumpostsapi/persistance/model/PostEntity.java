@@ -24,7 +24,8 @@ public class PostEntity {
     @Column(nullable = false)
     private LocalDateTime creationDate;
 
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, columnDefinition = "CLOB")
     private String content;
 
     @Column(nullable = false)
