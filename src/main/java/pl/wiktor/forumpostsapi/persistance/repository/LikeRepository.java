@@ -13,6 +13,7 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 
     Optional<LikeEntity> getByUuid(String uuid);
 
+    @Transactional
     void deleteAllByTopic(String topic);
 
     @Transactional

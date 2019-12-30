@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 public class TopicPostService {
 
     @Autowired
+    JwtUtil jwtUtil;
+    @Autowired
     private TopicsRepository topicsRepository;
     @Autowired
     private PostsRepository postsRepository;
@@ -36,9 +38,6 @@ public class TopicPostService {
     private LikeRepository likeRepository;
     @Autowired
     private UserExternalService userExternalService;
-    @Autowired
-    JwtUtil jwtUtil;
-
 
     public TopicWithPostListDTO getTopicWithPosts(String topicUuid) {
 
@@ -184,10 +183,11 @@ public class TopicPostService {
         postEntity.setCreationDate(now);
         postEntity.setTopic(topicEntity);
 
-        postsRepository.save(postEntity);
-
-        topicEntity.setLastPostDate(now);
-        topicsRepository.save(topicEntity);
+        if (topicEntity.isActive()) {
+            postsRepository.save(postEntity);
+            topicEntity.setLastPostDate(now);
+            topicsRepository.save(topicEntity);
+        }
 
         return PostMapper.fromEntityToDto(postEntity);
     }
