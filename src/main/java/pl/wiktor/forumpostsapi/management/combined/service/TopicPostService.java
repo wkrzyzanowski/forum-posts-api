@@ -100,9 +100,9 @@ public class TopicPostService {
         return PostMapper.fromEntityToDto(postEntity);
     }
 
-    private void deleteSinglePost(PostEntity postEntity) {
-        postsRepository.delete(postEntity);
+    void deleteSinglePost(PostEntity postEntity) {
         likeRepository.deleteAllByPost(postEntity.getUuid());
+        postsRepository.delete(postEntity);
     }
 
 
