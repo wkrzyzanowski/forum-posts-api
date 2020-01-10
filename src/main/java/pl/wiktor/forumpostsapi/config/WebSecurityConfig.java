@@ -23,10 +23,9 @@ import java.util.List;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    List<String> publicUrls;
     @Autowired
     private JwtRequestFilter requestFilter;
-
-    List<String> publicUrls;
 
     @Autowired
     public WebSecurityConfig(JwtRequestFilter requestFilter) {
@@ -48,6 +47,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/postsdb");
         web.ignoring().antMatchers("/postsdb/**");
+        web.ignoring().antMatchers("/v2/api-docs",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/swagger-ui.html",
+                "/webjars/**");
     }
 
     private void configurePublicUrls(HttpSecurity http) {
